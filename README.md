@@ -4,7 +4,7 @@ REST API для управления профилями кошек с дости
 
 ---
 
-## Запуск без Docker (Windows)
+## Запуск через Windows (PowerShell)
 
 ```powershell
 git clone https://github.com/Aizenhaim/kittygram-coursework.git
@@ -24,7 +24,7 @@ python load_test_data.py
 python manage.py runserver 8001
 ```
 
-## Запуск без Docker (Linux / macOS)
+## Запуск через Linux / macOS
 
 ```bash
 git clone https://github.com/Aizenhaim/kittygram-coursework.git
