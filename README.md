@@ -7,8 +7,8 @@ REST API для управления профилями кошек с дости
 ## Запуск через Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/Aizenhaim/kittygram-coursework.git
-cd kittygram-coursework
+git clone https://github.com/Aizenhaim/kittygram_cats.git
+cd kittygram_cats
 
 python -m venv venv
 .\venv\Scripts\Activate.ps1
@@ -27,8 +27,8 @@ python manage.py runserver 8001
 ## Запуск через Linux / macOS
 
 ```bash
-git clone https://github.com/Aizenhaim/kittygram-coursework.git
-cd kittygram-coursework
+git clone https://github.com/Aizenhaim/kittygram_cats.git
+cd kittygram_cats
 
 python3 -m venv venv
 source venv/bin/activate
@@ -54,8 +54,8 @@ python3 manage.py runserver 8001
 ### Быстрый старт
 
 ```bash
-git clone https://github.com/Aizenhaim/kittygram-coursework.git
-cd kittygram-coursework
+git clone https://github.com/Aizenhaim/kittygram_cats.git
+cd kittygram_cats
 
 cp .env.example .env
 
