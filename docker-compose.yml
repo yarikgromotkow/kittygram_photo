@@ -17,16 +17,8 @@ services:
 
   web:
     build: .
-    environment:
-      - DEBUG=False
-      - SECRET_KEY=django-insecure-test-key
-      - ALLOWED_HOSTS=localhost,127.0.0.1,web
-      - DB_ENGINE=django.db.backends.postgresql
-      - DB_NAME=kittygram
-      - DB_USER=kittygram_user
-      - DB_PASSWORD=kittygram_pass
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file:
+      - .env
     volumes:
       - static_volume:/app/staticfiles
     depends_on:
