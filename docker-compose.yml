@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:14-alpine
     environment:
-      POSTGRES_DB: kittygram
-      POSTGRES_USER: kittygram_user
-      POSTGRES_PASSWORD: kittygram_pass
+      POSTGRES_DB: ${DB_NAME:-kittygram}
+      POSTGRES_USER: ${DB_USER:-kittygram_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-kittygram_pass}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
