@@ -58,6 +58,7 @@ git clone https://github.com/Aizenhaim/kittygram_cats.git
 cd kittygram_cats
 
 cp .env.example .env
+# Открой .env и заполни SECRET_KEY и DB_PASSWORD своими значениями
 
 docker-compose up -d
 
