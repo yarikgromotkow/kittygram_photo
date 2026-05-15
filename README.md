@@ -24,6 +24,15 @@ python load_test_data.py
 python manage.py runserver 8001
 ```
 
+**Приложение доступно на:** `http://127.0.0.1:8001`
+
+| Адрес | Описание |
+|---|---|
+| `http://127.0.0.1:8001/api/` | API |
+| `http://127.0.0.1:8001/swagger/` | Документация Swagger |
+| `http://127.0.0.1:8001/redoc/` | Документация ReDoc |
+| `http://127.0.0.1:8001/admin/` | Админ-панель |
+
 ## Запуск через Linux / macOS
 
 ```bash
