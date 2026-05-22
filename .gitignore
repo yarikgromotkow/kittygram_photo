@@ -1,4 +1,15 @@
-# Kittygram Cats - Last updated: 2026-05-05
+# Kittygram Cats - Last updated: 2026-05-22
+
+# IDE
+.idea/
+.vscode/
+
+# Office temp files
+~$*.docx
+~$*.xlsx
+
+# Курсовая (не нужна в репо)
+*.docx
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
