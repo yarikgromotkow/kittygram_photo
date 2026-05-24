@@ -24,7 +24,7 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
 python load_test_data.py
-python manage.py runserver 8001
+python manage.py runserver
 ```
 
 **Linux / macOS**
@@ -40,12 +40,12 @@ pip install -r requirements.txt
 python3 manage.py migrate
 python3 manage.py createsuperuser
 python3 load_test_data.py
-python3 manage.py runserver 8001
+python3 manage.py runserver
 ```
 
 > `.env` файл для локального запуска **не нужен** — по умолчанию используется SQLite.
 
-**Приложение:** `http://127.0.0.1:8001`
+**Приложение:** `http://127.0.0.1:8000`
 
 | Адрес | Описание |
 |---|---|
