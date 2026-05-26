@@ -394,6 +394,56 @@
           }
         }
       ]
+    },
+    {
+      "name": "🗳️ Фотоконкурс — Голосование",
+      "item": [
+        {
+          "name": "Рейтинг кошек (GET /cats/rating/)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/cats/rating/","host": ["{{base_url}}"],"path": ["cats","rating",""]},
+            "description": "Возвращает всех кошек, отсортированных по количеству голосов (по убыванию). Доступно без авторизации."
+          }
+        },
+        {
+          "name": "Проголосовать за кошку (POST /cats/{id}/vote/)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization","value": "Bearer {{token2}}"}],
+            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}","vote",""]},
+            "description": "Голосуем токеном testuser (token2) за кошку admin (admin_cat_id). Выполнять после запросов 5.3a и 5.3b. Ожидаемый ответ: 201 Created."
+          }
+        },
+        {
+          "name": "❌ 400 — Повторный голос за ту же кошку",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization","value": "Bearer {{token2}}"}],
+            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}","vote",""]},
+            "description": "Повторный вызов после уже успешного голосования. Ожидаемый ответ: 400 Bad Request — 'Вы уже проголосовали за эту кошку!'"
+          }
+        },
+        {
+          "name": "❌ 400 — Голос за собственную кошку",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}","vote",""]},
+            "description": "Попытка admin проголосовать за собственную кошку (admin_cat_id создана в шаге 5.3a токеном admin). Ожидаемый ответ: 400 Bad Request — 'Нельзя голосовать за собственную кошку!'"
+          }
+        },
+        {
+          "name": "❌ 401 — Голос без токена",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {"raw": "{{base_url}}/cats/{{cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{cat_id}}","vote",""]},
+            "description": "Попытка проголосовать без авторизации. Ожидаемый ответ: 401 Unauthorized."
+          }
+        }
+      ]
     }
   ]
 }

@@ -7,7 +7,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 import datetime as dt
 
-from .models import CHOICES, Achievement, AchievementCat, Cat, User
+from .models import CHOICES, Achievement, AchievementCat, Cat, User, Vote
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -80,3 +80,38 @@ class CatSerializer(serializers.ModelSerializer):
                 current_achievement, _ = Achievement.objects.get_or_create(**achievement)
                 AchievementCat.objects.create(achievement=current_achievement, cat=instance)
         return instance
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания голоса за кошку."""
+    user = serializers.PrimaryKeyRelatedField(
+        read_only=True, default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Vote
+        fields = ('id', 'user', 'cat', 'created_at')
+        read_only_fields = ('id', 'user', 'created_at')
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Vote.objects.all(),
+                fields=('user', 'cat'),
+                message='Вы уже проголосовали за эту кошку!'
+            )
+        ]
+
+    def validate_cat(self, cat):
+        request = self.context['request']
+        if cat.owner == request.user:
+            raise serializers.ValidationError('Нельзя голосовать за собственную кошку!')
+        return cat
+
+
+class CatRatingSerializer(serializers.ModelSerializer):
+    """Сериализатор для рейтинга кошек с количеством голосов."""
+    vote_count = serializers.IntegerField(read_only=True)
+    owner_username = serializers.CharField(source='owner.username', read_only=True)
+
+    class Meta:
+        model = Cat
+        fields = ('id', 'name', 'color', 'birth_year', 'owner', 'owner_username', 'vote_count')

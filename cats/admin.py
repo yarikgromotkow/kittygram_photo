@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Achievement, AchievementCat, Cat
+from .models import Achievement, AchievementCat, Cat, Vote
 
 
 class AchievementCatInline(admin.TabularInline):
@@ -20,3 +20,11 @@ class CatAdmin(admin.ModelAdmin):
 class AchievementAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+
+
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'cat', 'created_at')
+    list_filter = ('cat', 'user')
+    search_fields = ('user__username', 'cat__name')
+    ordering = ('-created_at',)

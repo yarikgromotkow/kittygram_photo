@@ -44,3 +44,24 @@ class AchievementCat(models.Model):
 
     def __str__(self):
         return f'{self.achievement} {self.cat}'
+
+
+class Vote(models.Model):
+    """Голос пользователя за кошку в фотоконкурсе."""
+    user = models.ForeignKey(
+        User, related_name='votes', on_delete=models.CASCADE,
+        verbose_name='Пользователь'
+    )
+    cat = models.ForeignKey(
+        Cat, related_name='votes', on_delete=models.CASCADE,
+        verbose_name='Кошка'
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата голосования')
+
+    class Meta:
+        unique_together = ('user', 'cat')
+        verbose_name = 'Голос'
+        verbose_name_plural = 'Голоса'
+
+    def __str__(self):
+        return f'{self.user} → {self.cat}'
