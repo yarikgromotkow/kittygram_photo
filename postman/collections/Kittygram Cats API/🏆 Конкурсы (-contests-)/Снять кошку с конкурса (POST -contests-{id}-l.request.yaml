@@ -1,0 +1,15 @@
+$kind: http-request
+name: Снять кошку с конкурса (POST /contests/{id}/leave/)
+description: "Кастомное действие: убирает заявку собственной кошки. Ожидаемый ответ: 204 No Content."
+url: "{{base_url}}/contests/{{contest_id}}/leave/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "cat": {{cat_id}}
+    }
+order: 10000

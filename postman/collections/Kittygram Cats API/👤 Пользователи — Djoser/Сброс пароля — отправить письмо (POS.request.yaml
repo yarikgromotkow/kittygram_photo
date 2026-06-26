@@ -1,0 +1,13 @@
+$kind: http-request
+name: Сброс пароля — отправить письмо (POST /auth/users/reset_password/)
+url: "{{base_url}}/auth/users/reset_password/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "admin@example.com"
+    }
+order: 10000

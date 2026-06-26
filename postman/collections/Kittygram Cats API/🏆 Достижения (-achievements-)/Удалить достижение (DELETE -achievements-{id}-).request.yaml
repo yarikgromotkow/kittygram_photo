@@ -1,0 +1,7 @@
+$kind: http-request
+name: Удалить достижение (DELETE /achievements/{id}/)
+url: "{{base_url}}/achievements/{{ach_id}}/"
+method: DELETE
+headers:
+  Authorization: Bearer {{token}}
+order: 6000

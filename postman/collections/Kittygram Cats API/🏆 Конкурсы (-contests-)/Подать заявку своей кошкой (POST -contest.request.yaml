@@ -1,0 +1,15 @@
+$kind: http-request
+name: Подать заявку своей кошкой (POST /contests/{id}/enter/)
+description: "Кастомное действие: добавляет собственную кошку в конкурс. Ожидаемый ответ: 201 Created."
+url: "{{base_url}}/contests/{{contest_id}}/enter/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "cat": {{cat_id}}
+    }
+order: 5000

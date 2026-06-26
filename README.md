@@ -131,9 +131,9 @@ docker-compose down -v
 ```
 kittygram_photo/
 ├── cats/                   # Основное приложение
-│   ├── models.py           # Cat, Achievement, AchievementCat
+│   ├── models.py           # Cat, Achievement, AchievementCat, Vote, Contest, ContestEntry
 │   ├── serializers.py      # Валидация и сериализация
-│   ├── views.py            # ViewSet-ы
+│   ├── views.py            # ViewSet-ы (+ ContestViewSet)
 │   ├── permissions.py      # IsOwnerOrReadOnly
 │   └── urls.py
 ├── kittygram2/
@@ -144,6 +144,45 @@ kittygram_photo/
 ├── nginx.conf
 ├── requirements.txt
 └── load_test_data.py       # Тестовые данные
+```
+
+## Фотоконкурс (Contest API)
+
+Творческое расширение Kittygram: тематические фотоконкурсы кошек с заявками,
+голосованием и таблицей результатов. Новые модели — `Contest` (конкурс),
+`ContestEntry` (заявка кошки на участие) и `Vote` (голос за кошку).
+
+| URL | Метод | Описание | Права |
+|---|---|---|---|
+| `/api/contests/` | GET | Список конкурсов (фильтр `?is_active=`, поиск `?search=`, сортировка `?ordering=`, пагинация) | все |
+| `/api/contests/` | POST | Создать конкурс (организатор — из токена) | auth |
+| `/api/contests/{id}/` | GET | Карточка конкурса | все |
+| `/api/contests/{id}/` | PATCH/PUT/DELETE | Изменить/удалить конкурс | организатор |
+| `/api/contests/{id}/enter/` | POST | Подать заявку своей кошкой `{"cat": id}` | auth |
+| `/api/contests/{id}/leave/` | POST | Снять свою кошку `{"cat": id}` | auth |
+| `/api/contests/{id}/entries/` | GET | Участники конкурса | все |
+| `/api/contests/{id}/results/` | GET | Результаты: участники по числу голосов | все |
+| `/api/cats/{id}/vote/` | POST | Проголосовать за кошку (1 голос на пользователя) | auth |
+| `/api/cats/rating/` | GET | Общий рейтинг кошек по числу голосов | все |
+
+Бизнес-правила: заявку можно подать только за собственную кошку и только в
+активный конкурс; одна кошка не участвует в конкурсе дважды; дата окончания не
+раньше даты начала; нельзя голосовать за свою кошку и голосовать дважды.
+
+Пример — подать заявку и посмотреть результаты:
+```bash
+# создать конкурс (вернёт id)
+curl -X POST http://127.0.0.1:8000/api/contests/ \
+  -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
+  -d '{"title":"Лето 2026","start_date":"2026-06-01","end_date":"2026-08-31"}'
+
+# подать свою кошку (cat — id кошки)
+curl -X POST http://127.0.0.1:8000/api/contests/1/enter/ \
+  -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
+  -d '{"cat": 1}'
+
+# результаты конкурса
+curl http://127.0.0.1:8000/api/contests/1/results/
 ```
 
 ## Технологии

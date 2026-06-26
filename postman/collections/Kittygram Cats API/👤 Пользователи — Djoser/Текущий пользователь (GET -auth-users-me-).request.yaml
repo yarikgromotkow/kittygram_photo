@@ -1,0 +1,7 @@
+$kind: http-request
+name: Текущий пользователь (GET /auth/users/me/)
+url: "{{base_url}}/auth/users/me/"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 4000

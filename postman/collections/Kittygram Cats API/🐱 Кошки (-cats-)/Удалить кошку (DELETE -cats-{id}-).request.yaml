@@ -1,0 +1,7 @@
+$kind: http-request
+name: Удалить кошку (DELETE /cats/{id}/)
+url: "{{base_url}}/cats/{{cat_id}}/"
+method: DELETE
+headers:
+  Authorization: Bearer {{token}}
+order: 9000

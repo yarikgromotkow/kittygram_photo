@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{base_url}}/cats/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Призрак",
+      "color": "White",
+      "birth_year": 1800
+    }
+order: 13000

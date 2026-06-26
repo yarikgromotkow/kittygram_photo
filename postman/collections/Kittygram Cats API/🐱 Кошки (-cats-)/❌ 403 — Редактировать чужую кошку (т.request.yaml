@@ -1,0 +1,15 @@
+$kind: http-request
+name: ❌ 403 — Редактировать чужую кошку (тест 5.3)
+description: "Попытка отредактировать кошку admin (admin_cat_id) от имени testuser (token2). Ожидаемый ответ: 403 Forbidden."
+url: "{{base_url}}/cats/{{admin_cat_id}}/"
+method: PATCH
+headers:
+  Authorization: Bearer {{token2}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "birth_year": 2000
+    }
+order: 12000

@@ -1,0 +1,7 @@
+$kind: http-request
+name: Список всех пользователей (GET /auth/users/)
+url: "{{base_url}}/auth/users/"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

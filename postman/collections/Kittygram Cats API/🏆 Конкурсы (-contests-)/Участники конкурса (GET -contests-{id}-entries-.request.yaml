@@ -1,0 +1,6 @@
+$kind: http-request
+name: Участники конкурса (GET /contests/{id}/entries/)
+description: Список заявок (участников) конкурса.
+url: "{{base_url}}/contests/{{contest_id}}/entries/"
+method: GET
+order: 6000

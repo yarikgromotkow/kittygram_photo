@@ -1,0 +1,7 @@
+$kind: http-request
+name: Получить пользователя по ID (GET /auth/users/{id}/)
+url: "{{base_url}}/auth/users/{{user_id}}/"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

@@ -1,0 +1,17 @@
+$kind: http-request
+name: "Ошибка: дата окончания раньше начала (400)"
+description: "Ожидаемый ответ: 400 «Дата окончания не может быть раньше даты начала!»."
+url: "{{base_url}}/contests/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "title": "Некорректные даты",
+      "start_date": "2026-08-31",
+      "end_date": "2026-06-01"
+    }
+order: 9000

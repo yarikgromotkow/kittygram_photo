@@ -1,0 +1,15 @@
+$kind: http-request
+name: "Ошибка: заявка на чужую кошку (400)"
+description: "token2 пытается подать чужую кошку. Ожидаемый ответ: 400 «Подать заявку можно только за собственную кошку!»."
+url: "{{base_url}}/contests/{{contest_id}}/enter/"
+method: POST
+headers:
+  Authorization: Bearer {{token2}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "cat": {{admin_cat_id}}
+    }
+order: 8000

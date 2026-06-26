@@ -1,0 +1,6 @@
+$kind: http-request
+name: Рейтинг кошек (GET /cats/rating/)
+description: Возвращает всех кошек, отсортированных по количеству голосов (по убыванию). Доступно без авторизации.
+url: "{{base_url}}/cats/rating/"
+method: GET
+order: 1000

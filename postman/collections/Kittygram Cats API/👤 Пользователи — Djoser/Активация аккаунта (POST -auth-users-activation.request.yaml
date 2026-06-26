@@ -1,0 +1,14 @@
+$kind: http-request
+name: Активация аккаунта (POST /auth/users/activation/)
+url: "{{base_url}}/auth/users/activation/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "uid": "<uid из письма>",
+      "token": "<token из письма>"
+    }
+order: 14000

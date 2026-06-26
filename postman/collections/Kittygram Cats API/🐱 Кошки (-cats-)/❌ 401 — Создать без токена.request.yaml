@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{base_url}}/cats/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Безымянный",
+      "color": "Mixed",
+      "birth_year": 2020
+    }
+order: 14000

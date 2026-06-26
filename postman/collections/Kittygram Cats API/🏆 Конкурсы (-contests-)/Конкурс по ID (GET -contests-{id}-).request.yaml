@@ -1,0 +1,6 @@
+$kind: http-request
+name: Конкурс по ID (GET /contests/{id}/)
+description: Карточка конкурса с числом заявок (entries_count).
+url: "{{base_url}}/contests/{{contest_id}}/"
+method: GET
+order: 4000

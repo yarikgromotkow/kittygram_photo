@@ -1,0 +1,8 @@
+$kind: http-request
+name: ❌ 400 — Повторный голос за ту же кошку
+description: "Повторный вызов после уже успешного голосования. Ожидаемый ответ: 400 Bad Request — 'Вы уже проголосовали за эту кошку!'"
+url: "{{base_url}}/cats/{{admin_cat_id}}/vote/"
+method: POST
+headers:
+  Authorization: Bearer {{token2}}
+order: 3000

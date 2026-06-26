@@ -1,0 +1,5 @@
+$kind: http-request
+name: Получить кошку по ID (GET /cats/{id}/)
+url: "{{base_url}}/cats/{{cat_id}}/"
+method: GET
+order: 6000

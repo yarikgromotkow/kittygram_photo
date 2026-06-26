@@ -1,0 +1,6 @@
+$kind: http-request
+name: "Фильтр: только активные (?is_active=true)"
+description: Фильтрация по полю is_active. Можно комбинировать с ?search= и ?ordering=.
+url: "{{base_url}}/contests/"
+method: GET
+order: 2000

@@ -1,0 +1,25 @@
+$kind: http-request
+name: Создать конкурс (POST /contests/)
+description: "Создание конкурса авторизованным пользователем. Организатор подставляется из токена. Ожидаемый ответ: 201 Created."
+url: "{{base_url}}/contests/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "title": "Лучшее летнее фото 2026",
+      "description": "Сезонный фотоконкурс среди кошек",
+      "start_date": "2026-06-01",
+      "end_date": "2026-08-31"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 201) {
+          pm.collectionVariables.set('contest_id', String(pm.response.json().id));
+      }
+    language: text/javascript
+order: 3000

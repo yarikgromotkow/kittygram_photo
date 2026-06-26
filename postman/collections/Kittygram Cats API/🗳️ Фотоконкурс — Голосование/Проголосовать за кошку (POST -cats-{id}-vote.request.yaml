@@ -1,0 +1,8 @@
+$kind: http-request
+name: Проголосовать за кошку (POST /cats/{id}/vote/)
+description: "Голосуем токеном testuser (token2) за кошку admin (admin_cat_id). Выполнять после запросов 5.3a и 5.3b. Ожидаемый ответ: 201 Created."
+url: "{{base_url}}/cats/{{admin_cat_id}}/vote/"
+method: POST
+headers:
+  Authorization: Bearer {{token2}}
+order: 2000

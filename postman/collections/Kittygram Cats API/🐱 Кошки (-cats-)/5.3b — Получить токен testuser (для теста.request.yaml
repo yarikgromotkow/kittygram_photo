@@ -1,0 +1,25 @@
+$kind: http-request
+name: 5.3b — Получить токен testuser (для теста 403)
+description: Получаем токен testuser, сохраняем в token2. Сначала зарегистрируйте testuser через запрос 'Регистрация (POST /auth/users/)'.
+url: "{{base_url}}/auth/jwt/create/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "username": "testuser",
+      "password": "testpass123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 200) {
+          pm.collectionVariables.set('token2', pm.response.json().access);
+          console.log('token2 сохранён (testuser)');
+      } else {
+          console.error('Ошибка получения токена testuser. Сначала зарегистрируйте testuser через запрос Регистрация.');
+      }
+    language: text/javascript
+order: 11000

@@ -1,0 +1,28 @@
+$kind: http-request
+name: 5.3a — Создать кошку от admin (для теста 403)
+description: Создаём кошку под токеном admin ({{token}}). ID сохраняется в admin_cat_id. Выполнять ПОСЛЕ получения admin-токена.
+url: "{{base_url}}/cats/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Тест403",
+      "color": "Black",
+      "birth_year": 2022,
+      "achievements": []
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 201) {
+          pm.collectionVariables.set('admin_cat_id', String(pm.response.json().id));
+          console.log('admin_cat_id сохранён:', pm.response.json().id);
+      } else {
+          console.error('Не удалось создать кошку. Убедитесь, что token — это токен admin.');
+      }
+    language: text/javascript
+order: 10000

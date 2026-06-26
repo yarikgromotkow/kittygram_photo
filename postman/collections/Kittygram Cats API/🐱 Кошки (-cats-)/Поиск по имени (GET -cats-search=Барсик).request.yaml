@@ -1,0 +1,7 @@
+$kind: http-request
+name: Поиск по имени (GET /cats/?search=Барсик)
+url: "{{base_url}}/cats/?search=Барсик"
+method: GET
+queryParams:
+  search: Барсик
+order: 3000

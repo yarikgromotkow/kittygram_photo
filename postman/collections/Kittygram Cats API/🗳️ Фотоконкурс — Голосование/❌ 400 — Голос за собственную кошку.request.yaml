@@ -1,0 +1,7 @@
+$kind: http-request
+description: "Попытка admin проголосовать за собственную кошку (admin_cat_id создана в шаге 5.3a токеном admin). Ожидаемый ответ: 400 Bad Request — 'Нельзя голосовать за собственную кошку!'"
+url: "{{base_url}}/cats/{{admin_cat_id}}/vote/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+order: 4000

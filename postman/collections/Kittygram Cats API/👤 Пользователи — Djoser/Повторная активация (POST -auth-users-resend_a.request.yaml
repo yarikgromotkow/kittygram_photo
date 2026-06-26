@@ -1,0 +1,13 @@
+$kind: http-request
+name: Повторная активация (POST /auth/users/resend_activation/)
+url: "{{base_url}}/auth/users/resend_activation/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "test@example.com"
+    }
+order: 15000

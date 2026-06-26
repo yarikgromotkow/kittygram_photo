@@ -1,0 +1,24 @@
+$kind: http-request
+name: Получить токен (POST /auth/jwt/create/)
+url: "{{base_url}}/auth/jwt/create/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "username": "admin",
+      "password": "admin123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 200 || pm.response.code === 201) {
+          var j = pm.response.json();
+          pm.collectionVariables.set('token', j.access);
+          pm.collectionVariables.set('refresh', j.refresh);
+          console.log('Токен сохранён');
+      }
+    language: text/javascript
+order: 1000

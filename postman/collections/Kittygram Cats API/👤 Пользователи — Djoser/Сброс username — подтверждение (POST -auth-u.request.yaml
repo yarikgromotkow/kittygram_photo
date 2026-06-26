@@ -1,0 +1,13 @@
+$kind: http-request
+name: Сброс username — подтверждение (POST /auth/users/reset_username_confirm/)
+url: "{{base_url}}/auth/users/reset_username_confirm/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "new_username": "newname"
+    }
+order: 13000

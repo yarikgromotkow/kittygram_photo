@@ -1,0 +1,7 @@
+$kind: http-request
+name: Сортировка по имени (GET /cats/?ordering=name)
+url: "{{base_url}}/cats/?ordering=name"
+method: GET
+queryParams:
+  ordering: name
+order: 4000

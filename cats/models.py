@@ -65,3 +65,46 @@ class Vote(models.Model):
 
     def __str__(self):
         return f'{self.user} → {self.cat}'
+
+
+class Contest(models.Model):
+    """Фотоконкурс кошек: тематическая подборка участников с периодом проведения."""
+    title = models.CharField('Название', max_length=128)
+    description = models.TextField('Описание', blank=True, default='')
+    start_date = models.DateField('Дата начала')
+    end_date = models.DateField('Дата окончания')
+    is_active = models.BooleanField('Приём заявок открыт', default=True)
+    owner = models.ForeignKey(
+        User, related_name='contests', on_delete=models.CASCADE,
+        verbose_name='Организатор'
+    )
+    created_at = models.DateTimeField('Создан', auto_now_add=True)
+
+    class Meta:
+        ordering = ('-start_date',)
+        verbose_name = 'Конкурс'
+        verbose_name_plural = 'Конкурсы'
+
+    def __str__(self):
+        return self.title
+
+
+class ContestEntry(models.Model):
+    """Заявка кошки на участие в конкурсе (связь «конкурс — кошка»)."""
+    contest = models.ForeignKey(
+        Contest, related_name='entries', on_delete=models.CASCADE,
+        verbose_name='Конкурс'
+    )
+    cat = models.ForeignKey(
+        Cat, related_name='entries', on_delete=models.CASCADE,
+        verbose_name='Кошка'
+    )
+    created_at = models.DateTimeField('Подана', auto_now_add=True)
+
+    class Meta:
+        unique_together = ('contest', 'cat')
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
+
+    def __str__(self):
+        return f'{self.cat} → {self.contest}'

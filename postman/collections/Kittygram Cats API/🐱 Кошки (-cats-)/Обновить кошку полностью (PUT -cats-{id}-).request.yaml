@@ -1,0 +1,17 @@
+$kind: http-request
+name: Обновить кошку полностью (PUT /cats/{id}/)
+url: "{{base_url}}/cats/{{cat_id}}/"
+method: PUT
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Барсик",
+      "color": "Gray",
+      "birth_year": 2021,
+      "achievements": []
+    }
+order: 8000

@@ -1,0 +1,14 @@
+$kind: http-request
+name: Обновить кошку частично (PATCH /cats/{id}/)
+url: "{{base_url}}/cats/{{cat_id}}/"
+method: PATCH
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "birth_year": 2021
+    }
+order: 7000

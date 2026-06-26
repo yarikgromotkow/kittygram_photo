@@ -1,0 +1,7 @@
+$kind: http-request
+name: Получить достижение по ID (GET /achievements/{id}/)
+url: "{{base_url}}/achievements/{{ach_id}}/"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

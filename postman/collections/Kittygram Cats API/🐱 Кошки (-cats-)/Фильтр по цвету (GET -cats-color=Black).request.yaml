@@ -1,0 +1,7 @@
+$kind: http-request
+name: Фильтр по цвету (GET /cats/?color=Black)
+url: "{{base_url}}/cats/?color=Black"
+method: GET
+queryParams:
+  color: Black
+order: 2000

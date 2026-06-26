@@ -1,0 +1,14 @@
+$kind: http-request
+name: Обновить достижение полностью (PUT /achievements/{id}/)
+url: "{{base_url}}/achievements/{{ach_id}}/"
+method: PUT
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "achievement_name": "Чемпион мира"
+    }
+order: 5000

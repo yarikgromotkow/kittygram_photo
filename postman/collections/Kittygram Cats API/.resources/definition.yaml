@@ -1,0 +1,12 @@
+$kind: collection
+description: Полная коллекция по swagger.json. Токен сохраняется автоматически после запроса 'JWT — Получить токен'.
+variables:
+  base_url: http://127.0.0.1:8000/api
+  token: ""
+  refresh: ""
+  token2: ""
+  admin_cat_id: ""
+  cat_id: "1"
+  ach_id: "1"
+  user_id: "1"
+  contest_id: ""

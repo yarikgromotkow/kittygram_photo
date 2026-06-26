@@ -1,0 +1,5 @@
+$kind: http-request
+description: "Попытка проголосовать без авторизации. Ожидаемый ответ: 401 Unauthorized."
+url: "{{base_url}}/cats/{{cat_id}}/vote/"
+method: POST
+order: 5000

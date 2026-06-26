@@ -1,0 +1,26 @@
+$kind: http-request
+name: Создать кошку (POST /cats/)
+url: "{{base_url}}/cats/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Барсик",
+      "color": "Black",
+      "birth_year": 2022,
+      "achievements": [
+        {"achievement_name": "Чемпион"}
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 201) {
+          pm.collectionVariables.set('cat_id', String(pm.response.json().id));
+      }
+    language: text/javascript
+order: 5000

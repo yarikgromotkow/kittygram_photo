@@ -1,0 +1,6 @@
+$kind: http-request
+name: Результаты конкурса (GET /contests/{id}/results/)
+description: "Кастомное действие: участники по убыванию числа голосов (поле vote_count)."
+url: "{{base_url}}/contests/{{contest_id}}/results/"
+method: GET
+order: 7000

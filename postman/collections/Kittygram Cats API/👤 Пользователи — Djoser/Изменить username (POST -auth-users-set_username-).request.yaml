@@ -1,0 +1,15 @@
+$kind: http-request
+name: Изменить username (POST /auth/users/set_username/)
+url: "{{base_url}}/auth/users/set_username/"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "current_password": "admin123",
+      "new_username": "newusername"
+    }
+order: 9000

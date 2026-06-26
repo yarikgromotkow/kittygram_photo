@@ -1,0 +1,15 @@
+$kind: http-request
+name: Регистрация (POST /auth/users/)
+url: "{{base_url}}/auth/users/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "username": "testuser",
+      "password": "testpass123",
+      "email": "test@example.com"
+    }
+order: 1000

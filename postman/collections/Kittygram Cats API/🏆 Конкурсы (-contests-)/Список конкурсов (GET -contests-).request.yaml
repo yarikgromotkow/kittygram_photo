@@ -1,0 +1,6 @@
+$kind: http-request
+name: Список конкурсов (GET /contests/)
+description: Публичный постраничный список конкурсов. Доступно без токена.
+url: "{{base_url}}/contests/"
+method: GET
+order: 1000

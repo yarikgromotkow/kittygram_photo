@@ -1,0 +1,13 @@
+$kind: http-request
+name: Сброс username — отправить письмо (POST /auth/users/reset_username/)
+url: "{{base_url}}/auth/users/reset_username/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "admin@example.com"
+    }
+order: 12000

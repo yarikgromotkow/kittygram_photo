@@ -1,0 +1,14 @@
+$kind: http-request
+name: Обновить достижение частично (PATCH /achievements/{id}/)
+url: "{{base_url}}/achievements/{{ach_id}}/"
+method: PATCH
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "achievement_name": "Суперловкач"
+    }
+order: 4000

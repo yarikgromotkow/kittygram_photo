@@ -1,0 +1,14 @@
+$kind: http-request
+name: Обновить свой профиль полностью (PUT /auth/users/me/)
+url: "{{base_url}}/auth/users/me/"
+method: PUT
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "newemail@example.com"
+    }
+order: 6000

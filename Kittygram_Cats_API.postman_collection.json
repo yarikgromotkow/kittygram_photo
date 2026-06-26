@@ -1,449 +1,1642 @@
 {
-  "info": {
-    "name": "Kittygram Cats API",
-    "description": "Полная коллекция по swagger.json. Токен сохраняется автоматически после запроса 'JWT — Получить токен'.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    { "key": "base_url", "value": "http://127.0.0.1:8000/api", "type": "string" },
-    { "key": "token",    "value": "", "type": "string" },
-    { "key": "refresh",  "value": "", "type": "string" },
-    { "key": "token2",   "value": "", "type": "string" },
-    { "key": "admin_cat_id", "value": "", "type": "string" },
-    { "key": "cat_id",   "value": "1", "type": "string" },
-    { "key": "ach_id",   "value": "1", "type": "string" },
-    { "key": "user_id",  "value": "1", "type": "string" }
-  ],
-  "item": [
-    {
-      "name": "🔐 JWT — Авторизация",
-      "item": [
-        {
-          "name": "Получить токен (POST /auth/jwt/create/)",
-          "event": [{"listen": "test","script": {"exec": ["if (pm.response.code === 200 || pm.response.code === 201) {","    var j = pm.response.json();","    pm.collectionVariables.set('token', j.access);","    pm.collectionVariables.set('refresh', j.refresh);","    console.log('Токен сохранён');","}"],"type": "text/javascript"}}],
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/jwt/create/","host": ["{{base_url}}"],"path": ["auth","jwt","create",""]}
-          }
-        },
-        {
-          "name": "Обновить токен (POST /auth/jwt/refresh/)",
-          "event": [{"listen": "test","script": {"exec": ["if (pm.response.code === 200 || pm.response.code === 201) {","    pm.collectionVariables.set('token', pm.response.json().access);","}"],"type": "text/javascript"}}],
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/jwt/refresh/","host": ["{{base_url}}"],"path": ["auth","jwt","refresh",""]}
-          }
-        },
-        {
-          "name": "Проверить токен (POST /auth/jwt/verify/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"token\": \"{{token}}\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/jwt/verify/","host": ["{{base_url}}"],"path": ["auth","jwt","verify",""]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "👤 Пользователи — Djoser",
-      "item": [
-        {
-          "name": "Регистрация (POST /auth/users/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass123\",\n  \"email\": \"test@example.com\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/","host": ["{{base_url}}"],"path": ["auth","users",""]}
-          }
-        },
-        {
-          "name": "Список всех пользователей (GET /auth/users/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/auth/users/","host": ["{{base_url}}"],"path": ["auth","users",""]}
-          }
-        },
-        {
-          "name": "Получить пользователя по ID (GET /auth/users/{id}/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/auth/users/{{user_id}}/","host": ["{{base_url}}"],"path": ["auth","users","{{user_id}}",""]}
-          }
-        },
-        {
-          "name": "Текущий пользователь (GET /auth/users/me/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/auth/users/me/","host": ["{{base_url}}"],"path": ["auth","users","me",""]}
-          }
-        },
-        {
-          "name": "Обновить свой профиль (PATCH /auth/users/me/)",
-          "request": {
-            "method": "PATCH",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"email\": \"newemail@example.com\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/me/","host": ["{{base_url}}"],"path": ["auth","users","me",""]}
-          }
-        },
-        {
-          "name": "Обновить свой профиль полностью (PUT /auth/users/me/)",
-          "request": {
-            "method": "PUT",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"email\": \"newemail@example.com\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/me/","host": ["{{base_url}}"],"path": ["auth","users","me",""]}
-          }
-        },
-        {
-          "name": "Удалить свой аккаунт (DELETE /auth/users/me/)",
-          "request": {
-            "method": "DELETE",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"current_password\": \"admin123\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/me/","host": ["{{base_url}}"],"path": ["auth","users","me",""]}
-          }
-        },
-        {
-          "name": "Изменить пароль (POST /auth/users/set_password/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"current_password\": \"admin123\",\n  \"new_password\": \"newpass456\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/set_password/","host": ["{{base_url}}"],"path": ["auth","users","set_password",""]}
-          }
-        },
-        {
-          "name": "Изменить username (POST /auth/users/set_username/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"current_password\": \"admin123\",\n  \"new_username\": \"newusername\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/set_username/","host": ["{{base_url}}"],"path": ["auth","users","set_username",""]}
-          }
-        },
-        {
-          "name": "Сброс пароля — отправить письмо (POST /auth/users/reset_password/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"email\": \"admin@example.com\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/reset_password/","host": ["{{base_url}}"],"path": ["auth","users","reset_password",""]}
-          }
-        },
-        {
-          "name": "Сброс пароля — подтверждение (POST /auth/users/reset_password_confirm/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"uid\": \"<uid из письма>\",\n  \"token\": \"<token из письма>\",\n  \"new_password\": \"newpass123\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/reset_password_confirm/","host": ["{{base_url}}"],"path": ["auth","users","reset_password_confirm",""]}
-          }
-        },
-        {
-          "name": "Сброс username — отправить письмо (POST /auth/users/reset_username/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"email\": \"admin@example.com\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/reset_username/","host": ["{{base_url}}"],"path": ["auth","users","reset_username",""]}
-          }
-        },
-        {
-          "name": "Сброс username — подтверждение (POST /auth/users/reset_username_confirm/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"new_username\": \"newname\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/reset_username_confirm/","host": ["{{base_url}}"],"path": ["auth","users","reset_username_confirm",""]}
-          }
-        },
-        {
-          "name": "Активация аккаунта (POST /auth/users/activation/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"uid\": \"<uid из письма>\",\n  \"token\": \"<token из письма>\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/activation/","host": ["{{base_url}}"],"path": ["auth","users","activation",""]}
-          }
-        },
-        {
-          "name": "Повторная активация (POST /auth/users/resend_activation/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"email\": \"test@example.com\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/users/resend_activation/","host": ["{{base_url}}"],"path": ["auth","users","resend_activation",""]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "🐱 Кошки (/cats/)",
-      "item": [
-        {
-          "name": "Список кошек (GET /cats/)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/","host": ["{{base_url}}"],"path": ["cats",""]}
-          }
-        },
-        {
-          "name": "Фильтр по цвету (GET /cats/?color=Black)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/?color=Black","host": ["{{base_url}}"],"path": ["cats",""],"query": [{"key": "color","value": "Black"}]}
-          }
-        },
-        {
-          "name": "Поиск по имени (GET /cats/?search=Барсик)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/?search=Барсик","host": ["{{base_url}}"],"path": ["cats",""],"query": [{"key": "search","value": "Барсик"}]}
-          }
-        },
-        {
-          "name": "Сортировка по имени (GET /cats/?ordering=name)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/?ordering=name","host": ["{{base_url}}"],"path": ["cats",""],"query": [{"key": "ordering","value": "name"}]}
-          }
-        },
-        {
-          "name": "Создать кошку (POST /cats/)",
-          "event": [{"listen": "test","script": {"exec": ["if (pm.response.code === 201) {","    pm.collectionVariables.set('cat_id', String(pm.response.json().id));","}"],"type": "text/javascript"}}],
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"name\": \"Барсик\",\n  \"color\": \"Black\",\n  \"birth_year\": 2022,\n  \"achievements\": [\n    {\"achievement_name\": \"Чемпион\"}\n  ]\n}"},
-            "url": {"raw": "{{base_url}}/cats/","host": ["{{base_url}}"],"path": ["cats",""]}
-          }
-        },
-        {
-          "name": "Получить кошку по ID (GET /cats/{id}/)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/{{cat_id}}/","host": ["{{base_url}}"],"path": ["cats","{{cat_id}}",""]}
-          }
-        },
-        {
-          "name": "Обновить кошку частично (PATCH /cats/{id}/)",
-          "request": {
-            "method": "PATCH",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"birth_year\": 2021\n}"},
-            "url": {"raw": "{{base_url}}/cats/{{cat_id}}/","host": ["{{base_url}}"],"path": ["cats","{{cat_id}}",""]}
-          }
-        },
-        {
-          "name": "Обновить кошку полностью (PUT /cats/{id}/)",
-          "request": {
-            "method": "PUT",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"name\": \"Барсик\",\n  \"color\": \"Gray\",\n  \"birth_year\": 2021,\n  \"achievements\": []\n}"},
-            "url": {"raw": "{{base_url}}/cats/{{cat_id}}/","host": ["{{base_url}}"],"path": ["cats","{{cat_id}}",""]}
-          }
-        },
-        {
-          "name": "Удалить кошку (DELETE /cats/{id}/)",
-          "request": {
-            "method": "DELETE",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/cats/{{cat_id}}/","host": ["{{base_url}}"],"path": ["cats","{{cat_id}}",""]}
-          }
-        },
-        {
-          "name": "5.3a — Создать кошку от admin (для теста 403)",
-          "event": [{"listen": "test","script": {"exec": ["if (pm.response.code === 201) {","    pm.collectionVariables.set('admin_cat_id', String(pm.response.json().id));","    console.log('admin_cat_id сохранён:', pm.response.json().id);","} else {","    console.error('Не удалось создать кошку. Убедитесь, что token — это токен admin.');","}"],"type": "text/javascript"}}],
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"name\": \"Тест403\",\n  \"color\": \"Black\",\n  \"birth_year\": 2022,\n  \"achievements\": []\n}"},
-            "url": {"raw": "{{base_url}}/cats/","host": ["{{base_url}}"],"path": ["cats",""]},
-            "description": "Создаём кошку под токеном admin ({{token}}). ID сохраняется в admin_cat_id. Выполнять ПОСЛЕ получения admin-токена."
-          }
-        },
-        {
-          "name": "5.3b — Получить токен testuser (для теста 403)",
-          "event": [{"listen": "test","script": {"exec": ["if (pm.response.code === 200) {","    pm.collectionVariables.set('token2', pm.response.json().access);","    console.log('token2 сохранён (testuser)');","} else {","    console.error('Ошибка получения токена testuser. Сначала зарегистрируйте testuser через запрос Регистрация.');","}"],"type": "text/javascript"}}],
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass123\"\n}"},
-            "url": {"raw": "{{base_url}}/auth/jwt/create/","host": ["{{base_url}}"],"path": ["auth","jwt","create",""]},
-            "description": "Получаем токен testuser, сохраняем в token2. Сначала зарегистрируйте testuser через запрос 'Регистрация (POST /auth/users/)'."
-          }
-        },
-        {
-          "name": "❌ 403 — Редактировать чужую кошку (тест 5.3)",
-          "request": {
-            "method": "PATCH",
-            "header": [{"key": "Authorization","value": "Bearer {{token2}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"birth_year\": 2000\n}"},
-            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}",""]},
-            "description": "Попытка отредактировать кошку admin (admin_cat_id) от имени testuser (token2). Ожидаемый ответ: 403 Forbidden."
-          }
-        },
-        {
-          "name": "❌ 400 — Невалидный год рождения",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"name\": \"Призрак\",\n  \"color\": \"White\",\n  \"birth_year\": 1800\n}"},
-            "url": {"raw": "{{base_url}}/cats/","host": ["{{base_url}}"],"path": ["cats",""]}
-          }
-        },
-        {
-          "name": "❌ 401 — Создать без токена",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"name\": \"Безымянный\",\n  \"color\": \"Mixed\",\n  \"birth_year\": 2020\n}"},
-            "url": {"raw": "{{base_url}}/cats/","host": ["{{base_url}}"],"path": ["cats",""]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "🏆 Достижения (/achievements/)",
-      "item": [
-        {
-          "name": "Список достижений (GET /achievements/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/achievements/","host": ["{{base_url}}"],"path": ["achievements",""]}
-          }
-        },
-        {
-          "name": "Создать достижение (POST /achievements/)",
-          "event": [{"listen": "test","script": {"exec": ["if (pm.response.code === 201) {","    pm.collectionVariables.set('ach_id', String(pm.response.json().id));","}"],"type": "text/javascript"}}],
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"achievement_name\": \"Ловкач\"\n}"},
-            "url": {"raw": "{{base_url}}/achievements/","host": ["{{base_url}}"],"path": ["achievements",""]}
-          }
-        },
-        {
-          "name": "Получить достижение по ID (GET /achievements/{id}/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/achievements/{{ach_id}}/","host": ["{{base_url}}"],"path": ["achievements","{{ach_id}}",""]}
-          }
-        },
-        {
-          "name": "Обновить достижение частично (PATCH /achievements/{id}/)",
-          "request": {
-            "method": "PATCH",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"achievement_name\": \"Суперловкач\"\n}"},
-            "url": {"raw": "{{base_url}}/achievements/{{ach_id}}/","host": ["{{base_url}}"],"path": ["achievements","{{ach_id}}",""]}
-          }
-        },
-        {
-          "name": "Обновить достижение полностью (PUT /achievements/{id}/)",
-          "request": {
-            "method": "PUT",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"},{"key": "Content-Type","value": "application/json"}],
-            "body": {"mode": "raw","raw": "{\n  \"achievement_name\": \"Чемпион мира\"\n}"},
-            "url": {"raw": "{{base_url}}/achievements/{{ach_id}}/","host": ["{{base_url}}"],"path": ["achievements","{{ach_id}}",""]}
-          }
-        },
-        {
-          "name": "Удалить достижение (DELETE /achievements/{id}/)",
-          "request": {
-            "method": "DELETE",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/achievements/{{ach_id}}/","host": ["{{base_url}}"],"path": ["achievements","{{ach_id}}",""]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "👥 Пользователи read-only (/users/)",
-      "item": [
-        {
-          "name": "Список пользователей с кошками (GET /users/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/users/","host": ["{{base_url}}"],"path": ["users",""]}
-          }
-        },
-        {
-          "name": "Пользователь по ID (GET /users/{id}/)",
-          "request": {
-            "method": "GET",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/users/{{user_id}}/","host": ["{{base_url}}"],"path": ["users","{{user_id}}",""]}
-          }
-        }
-      ]
-    },
-    {
-      "name": "🗳️ Фотоконкурс — Голосование",
-      "item": [
-        {
-          "name": "Рейтинг кошек (GET /cats/rating/)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/rating/","host": ["{{base_url}}"],"path": ["cats","rating",""]},
-            "description": "Возвращает всех кошек, отсортированных по количеству голосов (по убыванию). Доступно без авторизации."
-          }
-        },
-        {
-          "name": "Проголосовать за кошку (POST /cats/{id}/vote/)",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token2}}"}],
-            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}","vote",""]},
-            "description": "Голосуем токеном testuser (token2) за кошку admin (admin_cat_id). Выполнять после запросов 5.3a и 5.3b. Ожидаемый ответ: 201 Created."
-          }
-        },
-        {
-          "name": "❌ 400 — Повторный голос за ту же кошку",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token2}}"}],
-            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}","vote",""]},
-            "description": "Повторный вызов после уже успешного голосования. Ожидаемый ответ: 400 Bad Request — 'Вы уже проголосовали за эту кошку!'"
-          }
-        },
-        {
-          "name": "❌ 400 — Голос за собственную кошку",
-          "request": {
-            "method": "POST",
-            "header": [{"key": "Authorization","value": "Bearer {{token}}"}],
-            "url": {"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{admin_cat_id}}","vote",""]},
-            "description": "Попытка admin проголосовать за собственную кошку (admin_cat_id создана в шаге 5.3a токеном admin). Ожидаемый ответ: 400 Bad Request — 'Нельзя голосовать за собственную кошку!'"
-          }
-        },
-        {
-          "name": "❌ 401 — Голос без токена",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {"raw": "{{base_url}}/cats/{{cat_id}}/vote/","host": ["{{base_url}}"],"path": ["cats","{{cat_id}}","vote",""]},
-            "description": "Попытка проголосовать без авторизации. Ожидаемый ответ: 401 Unauthorized."
-          }
-        }
-      ]
-    }
-  ]
+	"info": {
+		"name": "Kittygram Cats API",
+		"description": "Полная коллекция по swagger.json. Токен сохраняется автоматически после запроса 'JWT — Получить токен'.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "admin_cat_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "cat_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "ach_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "contest_id",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "🔐 JWT — Авторизация",
+			"item": [
+				{
+					"name": "Получить токен (POST /auth/jwt/create/)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var j = pm.response.json();",
+									"    pm.collectionVariables.set('token', j.access);",
+									"    pm.collectionVariables.set('refresh', j.refresh);",
+									"    console.log('Токен сохранён');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/jwt/create/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"jwt",
+								"create",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить токен (POST /auth/jwt/refresh/)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    pm.collectionVariables.set('token', pm.response.json().access);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/jwt/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"jwt",
+								"refresh",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Проверить токен (POST /auth/jwt/verify/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/jwt/verify/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"jwt",
+								"verify",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👤 Пользователи — Djoser",
+			"item": [
+				{
+					"name": "Регистрация (POST /auth/users/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass123\",\n  \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Список всех пользователей (GET /auth/users/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/users/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Получить пользователя по ID (GET /auth/users/{id}/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/users/{{user_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"{{user_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Текущий пользователь (GET /auth/users/me/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/users/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"me",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить свой профиль (PATCH /auth/users/me/)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newemail@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"me",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить свой профиль полностью (PUT /auth/users/me/)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newemail@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"me",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Удалить свой аккаунт (DELETE /auth/users/me/)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"me",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Изменить пароль (POST /auth/users/set_password/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"admin123\",\n  \"new_password\": \"newpass456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/set_password/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"set_password",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Изменить username (POST /auth/users/set_username/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"admin123\",\n  \"new_username\": \"newusername\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/set_username/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"set_username",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Сброс пароля — отправить письмо (POST /auth/users/reset_password/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/reset_password/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"reset_password",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Сброс пароля — подтверждение (POST /auth/users/reset_password_confirm/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"uid\": \"<uid из письма>\",\n  \"token\": \"<token из письма>\",\n  \"new_password\": \"newpass123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/reset_password_confirm/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"reset_password_confirm",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Сброс username — отправить письмо (POST /auth/users/reset_username/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/reset_username/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"reset_username",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Сброс username — подтверждение (POST /auth/users/reset_username_confirm/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"new_username\": \"newname\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/reset_username_confirm/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"reset_username_confirm",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Активация аккаунта (POST /auth/users/activation/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"uid\": \"<uid из письма>\",\n  \"token\": \"<token из письма>\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/activation/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"activation",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Повторная активация (POST /auth/users/resend_activation/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/users/resend_activation/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"resend_activation",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🐱 Кошки (/cats/)",
+			"item": [
+				{
+					"name": "Список кошек (GET /cats/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Фильтр по цвету (GET /cats/?color=Black)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/?color=Black",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							],
+							"query": [
+								{
+									"key": "color",
+									"value": "Black"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Поиск по имени (GET /cats/?search=Барсик)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/?search=Барсик",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "Барсик"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Сортировка по имени (GET /cats/?ordering=name)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/?ordering=name",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							],
+							"query": [
+								{
+									"key": "ordering",
+									"value": "name"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Создать кошку (POST /cats/)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.collectionVariables.set('cat_id', String(pm.response.json().id));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Барсик\",\n  \"color\": \"Black\",\n  \"birth_year\": 2022,\n  \"achievements\": [\n    {\"achievement_name\": \"Чемпион\"}\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Получить кошку по ID (GET /cats/{id}/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить кошку частично (PATCH /cats/{id}/)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"birth_year\": 2021\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить кошку полностью (PUT /cats/{id}/)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Барсик\",\n  \"color\": \"Gray\",\n  \"birth_year\": 2021,\n  \"achievements\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Удалить кошку (DELETE /cats/{id}/)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "5.3a — Создать кошку от admin (для теста 403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.collectionVariables.set('admin_cat_id', String(pm.response.json().id));",
+									"    console.log('admin_cat_id сохранён:', pm.response.json().id);",
+									"} else {",
+									"    console.error('Не удалось создать кошку. Убедитесь, что token — это токен admin.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Тест403\",\n  \"color\": \"Black\",\n  \"birth_year\": 2022,\n  \"achievements\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							]
+						},
+						"description": "Создаём кошку под токеном admin ({{token}}). ID сохраняется в admin_cat_id. Выполнять ПОСЛЕ получения admin-токена."
+					}
+				},
+				{
+					"name": "5.3b — Получить токен testuser (для теста 403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set('token2', pm.response.json().access);",
+									"    console.log('token2 сохранён (testuser)');",
+									"} else {",
+									"    console.error('Ошибка получения токена testuser. Сначала зарегистрируйте testuser через запрос Регистрация.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/jwt/create/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"jwt",
+								"create",
+								""
+							]
+						},
+						"description": "Получаем токен testuser, сохраняем в token2. Сначала зарегистрируйте testuser через запрос 'Регистрация (POST /auth/users/)'."
+					}
+				},
+				{
+					"name": "❌ 403 — Редактировать чужую кошку (тест 5.3)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token2}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"birth_year\": 2000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/{{admin_cat_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{admin_cat_id}}",
+								""
+							]
+						},
+						"description": "Попытка отредактировать кошку admin (admin_cat_id) от имени testuser (token2). Ожидаемый ответ: 403 Forbidden."
+					}
+				},
+				{
+					"name": "❌ 400 — Невалидный год рождения",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Призрак\",\n  \"color\": \"White\",\n  \"birth_year\": 1800\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "❌ 401 — Создать без токена",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Безымянный\",\n  \"color\": \"Mixed\",\n  \"birth_year\": 2020\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cats/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🏆 Достижения (/achievements/)",
+			"item": [
+				{
+					"name": "Список достижений (GET /achievements/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/achievements/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Создать достижение (POST /achievements/)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.collectionVariables.set('ach_id', String(pm.response.json().id));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"achievement_name\": \"Ловкач\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/achievements/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Получить достижение по ID (GET /achievements/{id}/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/achievements/{{ach_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								"{{ach_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить достижение частично (PATCH /achievements/{id}/)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"achievement_name\": \"Суперловкач\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/achievements/{{ach_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								"{{ach_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Обновить достижение полностью (PUT /achievements/{id}/)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"achievement_name\": \"Чемпион мира\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/achievements/{{ach_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								"{{ach_id}}",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Удалить достижение (DELETE /achievements/{id}/)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/achievements/{{ach_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								"{{ach_id}}",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 Пользователи read-only (/users/)",
+			"item": [
+				{
+					"name": "Список пользователей с кошками (GET /users/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Пользователь по ID (GET /users/{id}/)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/{{user_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🗳️ Фотоконкурс — Голосование",
+			"item": [
+				{
+					"name": "Рейтинг кошек (GET /cats/rating/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/rating/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"rating",
+								""
+							]
+						},
+						"description": "Возвращает всех кошек, отсортированных по количеству голосов (по убыванию). Доступно без авторизации."
+					}
+				},
+				{
+					"name": "Проголосовать за кошку (POST /cats/{id}/vote/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token2}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{admin_cat_id}}",
+								"vote",
+								""
+							]
+						},
+						"description": "Голосуем токеном testuser (token2) за кошку admin (admin_cat_id). Выполнять после запросов 5.3a и 5.3b. Ожидаемый ответ: 201 Created."
+					}
+				},
+				{
+					"name": "❌ 400 — Повторный голос за ту же кошку",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token2}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{admin_cat_id}}",
+								"vote",
+								""
+							]
+						},
+						"description": "Повторный вызов после уже успешного голосования. Ожидаемый ответ: 400 Bad Request — 'Вы уже проголосовали за эту кошку!'"
+					}
+				},
+				{
+					"name": "❌ 400 — Голос за собственную кошку",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/cats/{{admin_cat_id}}/vote/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{admin_cat_id}}",
+								"vote",
+								""
+							]
+						},
+						"description": "Попытка admin проголосовать за собственную кошку (admin_cat_id создана в шаге 5.3a токеном admin). Ожидаемый ответ: 400 Bad Request — 'Нельзя голосовать за собственную кошку!'"
+					}
+				},
+				{
+					"name": "❌ 401 — Голос без токена",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cats/{{cat_id}}/vote/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cats",
+								"{{cat_id}}",
+								"vote",
+								""
+							]
+						},
+						"description": "Попытка проголосовать без авторизации. Ожидаемый ответ: 401 Unauthorized."
+					}
+				}
+			]
+		},
+		{
+			"name": "🏆 Конкурсы (/contests/)",
+			"item": [
+				{
+					"name": "Список конкурсов (GET /contests/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/contests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								""
+							]
+						},
+						"description": "Публичный постраничный список конкурсов. Доступно без токена."
+					}
+				},
+				{
+					"name": "Фильтр: только активные (?is_active=true)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/contests/?is_active=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								""
+							]
+						},
+						"description": "Фильтрация по полю is_active. Можно комбинировать с ?search= и ?ordering=."
+					}
+				},
+				{
+					"name": "Создать конкурс (POST /contests/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/contests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								""
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Лучшее летнее фото 2026\",\n  \"description\": \"Сезонный фотоконкурс среди кошек\",\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-08-31\"\n}"
+						},
+						"description": "Создание конкурса авторизованным пользователем. Организатор подставляется из токена. Ожидаемый ответ: 201 Created."
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    pm.collectionVariables.set('contest_id', String(pm.response.json().id));",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Конкурс по ID (GET /contests/{id}/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/contests/{{contest_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								"{{contest_id}}",
+								""
+							]
+						},
+						"description": "Карточка конкурса с числом заявок (entries_count)."
+					}
+				},
+				{
+					"name": "Подать заявку своей кошкой (POST /contests/{id}/enter/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/contests/{{contest_id}}/enter/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								"{{contest_id}}",
+								"enter",
+								""
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cat\": {{cat_id}}\n}"
+						},
+						"description": "Кастомное действие: добавляет собственную кошку в конкурс. Ожидаемый ответ: 201 Created."
+					}
+				},
+				{
+					"name": "Участники конкурса (GET /contests/{id}/entries/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/contests/{{contest_id}}/entries/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								"{{contest_id}}",
+								"entries",
+								""
+							]
+						},
+						"description": "Список заявок (участников) конкурса."
+					}
+				},
+				{
+					"name": "Результаты конкурса (GET /contests/{id}/results/)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/contests/{{contest_id}}/results/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								"{{contest_id}}",
+								"results",
+								""
+							]
+						},
+						"description": "Кастомное действие: участники по убыванию числа голосов (поле vote_count)."
+					}
+				},
+				{
+					"name": "Ошибка: заявка на чужую кошку (400)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token2}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/contests/{{contest_id}}/enter/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								"{{contest_id}}",
+								"enter",
+								""
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cat\": {{admin_cat_id}}\n}"
+						},
+						"description": "token2 пытается подать чужую кошку. Ожидаемый ответ: 400 «Подать заявку можно только за собственную кошку!»."
+					}
+				},
+				{
+					"name": "Ошибка: дата окончания раньше начала (400)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/contests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								""
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Некорректные даты\",\n  \"start_date\": \"2026-08-31\",\n  \"end_date\": \"2026-06-01\"\n}"
+						},
+						"description": "Ожидаемый ответ: 400 «Дата окончания не может быть раньше даты начала!»."
+					}
+				},
+				{
+					"name": "Снять кошку с конкурса (POST /contests/{id}/leave/)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/contests/{{contest_id}}/leave/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"contests",
+								"{{contest_id}}",
+								"leave",
+								""
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cat\": {{cat_id}}\n}"
+						},
+						"description": "Кастомное действие: убирает заявку собственной кошки. Ожидаемый ответ: 204 No Content."
+					}
+				}
+			]
+		}
+	]
 }
